@@ -76,8 +76,7 @@ def dop2(st, atom_d1, atom_d2, atom_r1, atom_r2):
     list_d1d2_e = sorted(list_d1d2_e, key=lambda list: list[1])
     return(list_d1d2_e)
 
-def foo():
-    return 2
+
 
 
     

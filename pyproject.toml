@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+dependencies = [
+  "numpy",
+  "scipy",
+  "ase",
+  "pymatgen",
+  "sevenn",
+  "siman",
+]
+
+requires-python = ">=3.8"
+
+[project]
+name = "defects_se"
+authors = [{name = "Daniil Chernyshov", email = "mail@mail.com"}]
+dynamic = ["version", "description"]
+readme = "README.md"
+license = {file = "LICENSE"}
+

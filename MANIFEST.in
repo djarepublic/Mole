@@ -1,0 +1,4 @@
+include LICENSE
+include README.md
+include defects_se/data/*.pkl
+include defects_se/*.json

@@ -2,3 +2,4 @@
 *.png
 !test.png
 *.POSCAR
+defects_se.egg-info

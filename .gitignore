@@ -1,0 +1,3 @@
+test.cif
+*.png
+!test.png

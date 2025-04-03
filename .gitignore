@@ -1,3 +1,4 @@
-test.cif
+*.cif
 *.png
 !test.png
+*.POSCAR

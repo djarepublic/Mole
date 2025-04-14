@@ -26,11 +26,11 @@ def find_decomp_id(st):
       phd = PhaseDiagram(entries)
       cst = Composition(st.get_formula())
       dec = phd.get_decomposition(cst)
-      id = []
+      id_val = []
       for key, val  in dec.items():
-          id.append(key.data['material_id'])
+          id_val.append((key.data['material_id'], val))
 
-      return id
+      return id_val
 
 
 def calc_react(initial_phase, prod):

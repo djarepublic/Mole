@@ -27,7 +27,6 @@ class defects:
         at_list = st.get_unique_type_els()
         oxi_list = st.get_oxi_states('guess')
         stp = st.convert2pymatgen()
-      #   stp.add_oxidation_state_by_guess()
         
         dict_oxi = {}
         for i, el in enumerate(st.get_elements()):
@@ -38,7 +37,6 @@ class defects:
         self.ion_types = {}
 
         for at in at_list:
-            #self.ion_types[at] = {}
             ion_dict = {}
             ion_dict['oxi_state'] = dict_oxi[at]
     
@@ -109,7 +107,7 @@ class defects:
        
        
 
-    def search_dop(self, prec_r, prec_eln, dif=None, reduce = 1):   #prec_ip
+    def search_dop(self, prec_r, prec_eln, dif=None, reduce = 1):   
        """
        INPUT:
          prec_r (float) - search dopants with ionic radius in interval  R_i - prec_r * R_i < R_d < R_i + prec_r * R_i
@@ -126,13 +124,6 @@ class defects:
        """
        dop = []
        for d_el, d_el_dict  in table_ir.items():
-         # dop_s = {}
-         # d_oxi_list = []
-         # d_coord_list = []
-         # d_ir_list = []
-         # d_rep_elements = []
-         # d_position = []
-         # el_oxi_list = []
          for d_oxi, d_oxi_dict in d_el_dict.items():
              for d_coord, prop in d_oxi_dict.items():
                  if (d_coord == "IVSQ" or d_coord == "IVPY"):
@@ -143,7 +134,6 @@ class defects:
                      d_coord = 'III'
                  d_oxi = float(d_oxi)
                  d_coord = int(rn.index(d_coord))
-                 #d_ip = ionization_energies[d_el]
                  d_eln = eln[d_el]
                  for ion in self.ion_types:
 
@@ -151,19 +141,15 @@ class defects:
                         n = len(self.ion_types[ion]['non_sym'])
                         for i in range(n):
                             
-                           # try:
                             M_IR = self.ion_types[ion]['ionic_radius'][i]
                             r_min = (1-prec_r) * M_IR
                             r_max = (1+prec_r) * M_IR
-                            #ip_min = (1-prec_ip)*self.ion_types[ion]['ip']
-                            #ip_max = (1+prec_ip)*self.ion_types[ion]['ip']
                       
                             if (
                                 (int(self.ion_types[ion]['coord_number'][i]) == d_coord) and 
                                 (prop['r_ionic']>r_min and prop['r_ionic']<r_max) and
                                 (abs(m_eln - d_eln) < prec_eln) and (d_el not in exceptions) and
                                 (d_el not in self.ion_types) 
-                                #(d_ip > ip_min and d_ip < ip_max) and (d_el not in exceptions)
                                ):
                               
                               if( 
@@ -172,9 +158,6 @@ class defects:
                                   ((self.ion_types[ion]['oxi_state'] +1 == d_oxi or self.ion_types[ion]['oxi_state'] +2 == d_oxi) and (dif==None))
                                  ):
                                
-
-                              #  el_oxi_list.append(self.ion_types[ion]['oxi_state'][i])
-                              #  d_oxi_list.append(d_oxi)
                                dop_s = {}
                                dop_s['dopant'] = d_el
                                dop_s['matrix_el'] = ion
@@ -193,21 +176,6 @@ class defects:
                                dop_s['dop_position'] = self.ion_types[ion]['non_sym'][i]
                                dop_s['av_dist'] = self.ion_types[ion]['av_dist'][i]
                                dop.append(dop_s)
-                           
-                           # except TypeError as e:
-                           #    continue
-                           
-  
-                              #  if d_coord_list:
-                              #     dop_s['element'] = rep_el
-                              #     dop_s['oxi_state'] = d_oxi
-                              #     dop_s['position'] = d_position
-                              #     dop_s['DR'] = DR
-                              #     # dop_s['el_oxi_states'] = el_oxi_list
-                              #     dop_s['coord_number'] = d_coord_list
-                              #     dop_s['ir'] = d_ir_list
-                              #  if dop_s:
-                              #     dop[d_el] = dop_s
        if reduce == 1:
          result_dict = {}
 
@@ -246,36 +214,17 @@ class defects:
        
        return(dop)
             
-
-
-    def make_st(self, dop_el, dop_dict):
+    def make_dop(self, dop_el, dop_dict):
         """
-         INPUT:
-            dop_el (str) - dopant element
-            dop_dict (dict) - dopant_dict from search_dop
-
-         OUTPUT:
-            r_sorted - distance between vacancy and dopant
-            st_sorted - structures
-            xred_sorted - xred of vacancies
+        INPUT:
+           dop_el (str) - dopant element
+           dop_dict (dict) - dopant_dict from search_dop    
+        OUTPUT:
+           std - structure with substituted dopant atom
 
         """
         
-        st_d = []
         
-
-      #   NN = C
-      #   if dop_dict['matrix_el'] == self.alk:
-      #      if dop_dict['dop_oxi'] -  dop_dict['matrix_oxi'] == 2:
-      #         NN = NN + 2
-      #      else:
-      #         NN = NN + 1
-        # else:
-        #    if dop_dict['oxi_state'][i] - dop_dict['el_oxi_states'][i] == 2:
-        #       NN = NN + 2
-        #    else:
-        #       NN = NN + 1 
-      #   N = len(self.st.get_numbers(dop_dict['matrix_el']))
         if max(self.st.rprimd_len()) < 10:
             l = [10, 10, 10]
             c_st = supercell(self.st, l)
@@ -289,44 +238,52 @@ class defects:
             c_st = supercell(self.st, l,  test_natom=0)
                
 
-
-
-        
-      #   while N < NN:
-      #      l = [l1 + 1 for l1 in l]
-      #      c_st = supercell(self.st, l)
-      #      N = len(c_st.get_numbers(dop_dict['matrix_el']))
-
         in_n = c_st.init_numbers        # эотот блок востанавливает исходные номера новой структуры по старой
         for j in range(len(in_n)):
            if in_n[j]==dop_dict['dop_position']:
               new_pos = j
               break
+           
+        std = c_st.replace_atoms([new_pos], dop_el) 
+        return std
 
-            
-            
+       
 
+    def make_st(self, dop_el, dop_dict):
+        
+        """
+         INPUT:
+            dop_el (str) - dopant element
+            dop_dict (dict) - dopant_dict from search_dop
+
+         OUTPUT:
+            r_sorted - distance between vacancy and dopant
+            st_sorted - structures
+            xred_sorted - xred of vacancies
+
+        """
+
+        st_d = []
         r = []
         xred = []
-        if dop_dict['dop_oxi'] -  dop_dict['matrix_oxi'] == 1:
-           cst = c_st.replace_atoms([new_pos], dop_el)    
-           dop_pos =   cst.get_elements_by_el_name(dop_el)[0]
-           non_sym_alk = cst.determine_symmetry_positions(self.alk)
-           nsa = []
-           for pos in non_sym_alk:
-              nsa.append(pos[0])
-           for p in nsa:
-              r.append(cst.distance(p, dop_pos))
-              xred.append(cst.xred[p])
-              cst1 = cst.del_atom(p)
-              st_d.append(cst1 ) 
 
-           r_st = sorted(zip(r, st_d, xred), key=lambda x: x[0])
-           r_sorted, st_sorted, xred_sorted = map(list, zip(*r_st))
-           return r_sorted, st_sorted, xred_sorted
+        cst = self.make_dop(self, dop_el, dop_dict)   
+        dop_pos =   cst.get_elements_by_el_name(dop_el)[0]
+        non_sym_alk = cst.determine_symmetry_positions(self.alk)
+        nsa = []
+        for pos in non_sym_alk:
+           nsa.append(pos[0])
+        for p in nsa:
+           r.append(cst.distance(p, dop_pos))
+           xred.append(cst.xred[p])
+           cst1 = cst.del_atom(p)
+           st_d.append(cst1 )  
+        r_st = sorted(zip(r, st_d, xred), key=lambda x: x[0])
+        r_sorted, st_sorted, xred_sorted = map(list, zip(*r_st))
+        return r_sorted, st_sorted, xred_sorted
 
 
-    def make_st2(self, dop_el, dop_dict, draw = False):
+    def mine_st(self, dop_el, dop_dict):
             """
              INPUT:
                 dop_el (str) - dopant element
@@ -334,42 +291,15 @@ class defects:
                 draw - add Pu atom in vacancy
     
              OUTPUT:
-                st_min_e, st_max_r
-
-                if draw == True:
-                  st_min_e, st_max_r, st_min_e + Pu, st_max_r + Pu
+                st_min_e, st_min_ed - structure (dopant+vacancy) with minimum energy, (st_min_ed for visualization)
     
             """
             
            
             r_sorted, st_sorted, xred_sorted = self.make_st(dop_el, dop_dict)
             st_short_mine = st_sorted[:4]
-            ind_max = len(st_sorted) - 1
-         #   st_short_maxr = st_sorted[ind_max - 2:]
-        
-      #   if dop_dict['dop_oxi'] -  dop_dict['matrix_oxi'] == 2:
-      #      cst = c_st.replace_atoms([new_pos], dop_el)
-      #      non_sym_alk = cst.determine_symmetry_positions(self.alk)
-      #      nsa = []
-      #      for pos in non_sym_alk:
-      #         nsa.append(pos[0])
-      #      for p in nsa:
-      #         cst1 = cst.del_atom(p)
-      #         non_sym_alk2 = cst1.determine_symmetry_positions(self.alk)
-      #         nsa2 = []
-      #         for pos in non_sym_alk2:
-      #            nsa2.append(pos[0])
-      #         for p2 in nsa2:
-      #            cst2 = cst1.del_atom(p2)
-      #            if cst2 not in st_d:
-      #               st_d.append(cst2)
-
             st_dp_mine = [st.convert2pymatgen() for st in st_short_mine]
             st_da_mine = [AseAtomsAdaptor.get_atoms(s) for s in st_dp_mine]
-
-      #       st_dp_maxr = [st.convert2pymatgen() for st in st_short_maxr]
-      #       st_da_maxr = [AseAtomsAdaptor.get_atoms(s) for s in st_dp_maxr]
-
 
             sevennet_0_cal = SevenNetCalculator("7net-0") 
 
@@ -378,70 +308,31 @@ class defects:
                s.calc = sevennet_0_cal
                E_UP_mine.append(s.get_potential_energy())
 
-      #   E_UP_maxr = []
-      #   for s in st_da_maxr:
-      #      s.calc = sevennet_0_cal
-      #      E_UP_maxr.append(s.get_potential_energy())
-        
-        
             ind_min_e = E_UP_mine.index(min(E_UP_mine))
-      #       ind_max_r = E_UP_maxr.index(min(E_UP_maxr))
-
-
             st_min_e = st_sorted[ind_min_e]
-            st_max_r = st_sorted[ind_max ]
+            st_min_ed = st_min_e.add_atom(xred_sorted[ind_min_e ], 'Pu')            
+            return st_min_e, st_min_ed
+    
 
 
-
-
-            if draw:
-               st_min_ed = st_min_e.add_atom(xred_sorted[ind_min_e], 'Pu')
-               st_max_rd = st_max_r.add_atom(xred_sorted[ind_max ], 'Pu')
-
-               return st_min_e, st_max_r, st_min_ed, st_max_rd
-
-            else:
-            
-             return st_min_e, st_max_r
+    def maxr_st(self, dop_el, dop_dict, draw = False):
+       """
+        INPUT:
+           dop_el (str) - dopant element
+           dop_dict (dict) - dopant_dict from search_dop
+           draw - add Pu atom in vacancy
+ 
+        OUTPUT:
+           st_max_r, st_max_rd - structure (dopant+vacancy) with maximum dopant-vacancy distance, (st_max_rd for visualization)
+ 
+       """
+       
+       r_sorted, st_sorted, xred_sorted = self.make_st(dop_el, dop_dict)
+       ind_max = len(st_sorted) - 1
+       st_max_r = st_sorted[ind_max ]
+       st_max_rd = st_max_r.add_atom(xred_sorted[ind_max ], 'Pu')
+       return st_max_r, st_max_rd
            
-         
-   #      st_dp_unic = []
-   #      for structure in st_dp:
-   #  # Проверяем, есть ли уже такая структура в unique_structures
-   #          if not any(structure == existing for existing in st_dp_unic):
-   #             st_dp_unic.append(structure)
-
-      #   if ew==False:
-      #    return st_d
-      #        else:
-
-
-      #   ew = []            
-      #   for stp in st_dp_unic:
-      #      dict_oxi = self.dict_oxi
-      #      dict_oxi[dop_el] = dop_dict['oxi_state']
-      #      stp.add_oxidation_state_by_element(dict_oxi)
-      #      E_ev = EwaldElectrostaticModel().get_energy(stp)
-      #      ew.append(E_ev)
-
-
-         #   st = Structure().update_from_pymatgen(stp)
-         #   st_e.append((st, E_ev))      
-      #   st_e = sorted(st_e, key=lambda list: list[1])
-      #   st = []
-      #   ew = []
-      #   rr = []
-      #   st_numb = min(st_numb, len(st_e))
-      #   for i in range(st_numb):
-      #    st.append(st_e[i][0])
-      #    ew.append(st_e[i][1])
-      #    rr
-      #   ew = [e - min(ew) for e in ew]
-      #   Nu = min(st_numb, len(st_d))
-
-        
-      #   return (st_min_e, st_max_r), (st_min_ed, st_max_rd)
-
     
 
 

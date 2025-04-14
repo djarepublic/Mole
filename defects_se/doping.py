@@ -267,7 +267,7 @@ class defects:
         r = []
         xred = []
 
-        cst = self.make_dop(self, dop_el, dop_dict)   
+        cst = self.make_dop(dop_el, dop_dict)   
         dop_pos =   cst.get_elements_by_el_name(dop_el)[0]
         non_sym_alk = cst.determine_symmetry_positions(self.alk)
         nsa = []

@@ -88,9 +88,11 @@ eln = {'D': 13.60, 'OH': 100,
 }
 
 alkali = ['Li', 'Na', 'K', 'Rb']
-actinides = ['Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr', 'At']
+
+other = ['At', 'Re', 'Tc', 'Rh', 'Os']
+actinides = ['Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr']
 lanthanides = ["Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu"]
-exceptions = actinides + lanthanides
+exceptions = actinides + lanthanides + other
 
 with open(os.path.dirname(__file__)+"/shannon-radii.json") as f:
         out = f.read()

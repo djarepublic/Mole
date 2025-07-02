@@ -89,7 +89,7 @@ eln = {'D': 13.60, 'OH': 100,
 
 alkali = ['Li', 'Na', 'K', 'Rb']
 
-other = ['At', 'Re', 'Tc', 'Rh', 'Os']
+other = ['At', 'Re', 'Tc', 'Rh', 'Os', 'Ra']
 actinides = ['Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr']
 lanthanides = ["Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu"]
 exceptions = actinides + lanthanides + other

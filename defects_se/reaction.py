@@ -4,7 +4,7 @@ API_KEY = 'AaqKFXh9Qzoo1FqCIbELtEVHa72BW3EG'
 from mp_api.client import MPRester
 from pymatgen.analysis.phase_diagram import (CompoundPhaseDiagram, PDPlotter, PhaseDiagram, PDEntry)
 from pymatgen.core import Composition
-from siman.core.structure import Structure()
+from siman.core.structure import Structure
 pymatgen2siman = Structure().update_from_pymatgen
 
 class Decompose():

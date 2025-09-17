@@ -38,7 +38,7 @@ class Decompose():
           st_d = pymatgen2siman(key.structure)
           st_d.name = key.data['material_id'] + '_' + key.formula
           c = val*st.natom/st_d.natom
-          prod = prod +  round(c, 3) + ' ' + key.formula + ' + '
+          prod = prod +  str(round(c, 3)) + ' ' + key.formula + ' + '
           ids.append(key.data['material_id'])
           dec_st.append(st_d)
           coef.append(c)

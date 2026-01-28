@@ -9,7 +9,7 @@ from .mat_data import  eln, exceptions, table_ir, rn, ionic_radius
 
 
 
-class defects:
+class Defects:
     def __init__(self, st, alk):
         """
       NNPUT:
@@ -107,7 +107,7 @@ class defects:
        
        
 
-    def search_dop(self, prec_r, prec_eln, dif=None, reduce = 1):   
+    def search_dop(self, prec_r, prec_eln, dif=1, reduce = 2):   
        """
        INPUT:
          prec_r (float) - search dopants with ionic radius in interval  R_i - prec_r * R_i < R_d < R_i + prec_r * R_i
@@ -176,7 +176,7 @@ class defects:
                                dop_s['dop_position'] = self.ion_types[ion]['non_sym'][i]
                                dop_s['av_dist'] = self.ion_types[ion]['av_dist'][i]
                                dop.append(dop_s)
-       if reduce == 1:
+       if reduce > 0:
          result_dict = {}
 
          for item in dop:
@@ -194,22 +194,23 @@ class defects:
          
          dop = list(result_dict.values())
 
-         dop2 = []
-         try:
-            rr = self.look_match()
-            if rr:
-               if rr[0]< 0.1:
-                  target_key = 'oxi_state'
-                  compare = [rr[1][0], rr[1][1]]
-                  #print(compare)
-                  atom = min(compare, key=lambda k: self.ion_types[k][target_key])
-                  print(atom)
-                  for item in dop:
-                     if item['matrix_el'] != atom:
-                        dop2.append(item)
-                  dop = dop2
-         except:
-            pass
+         if reduce >1:
+            dop2 = []
+            try:
+               rr = self.look_match()
+               if rr:
+                  if rr[0]< 0.1:
+                     target_key = 'oxi_state'
+                     compare = [rr[1][0], rr[1][1]]
+                     #print(compare)
+                     atom = min(compare, key=lambda k: self.ion_types[k][target_key])
+                     print(atom)
+                     for item in dop:
+                        if item['matrix_el'] != atom:
+                           dop2.append(item)
+                     dop = dop2
+            except:
+               pass
          
        
        return(dop)
@@ -283,7 +284,7 @@ class defects:
         return r_sorted, st_sorted, xred_sorted
 
 
-    def mine_st(self, dop_el, dop_dict):
+    def mine_st(self, dop_el, dop_dict, calc = None):
             """
              INPUT:
                 dop_el (str) - dopant element
@@ -301,11 +302,11 @@ class defects:
             st_dp_mine = [st.convert2pymatgen() for st in st_short_mine]
             st_da_mine = [AseAtomsAdaptor.get_atoms(s) for s in st_dp_mine]
 
-            sevennet_0_cal = SevenNetCalculator("7net-0") 
+            # sevennet_0_cal = SevenNetCalculator("7net-0") 
 
             E_UP_mine = []
             for s in st_da_mine:
-               s.calc = sevennet_0_cal
+               s.calc = calc
                E_UP_mine.append(s.get_potential_energy())
 
             ind_min_e = E_UP_mine.index(min(E_UP_mine))
@@ -356,3 +357,34 @@ def calc_conc(st, E, matrix, ALK = 'Li',  T = 1000, dif=1):
   conc = np.sqrt(NA/M) * np.exp(-E/(2*k*T))
   
   return( conc )
+
+def Ch(st, E0, Eb, matrix, T = 1000, ALK = 'Li', g = 6):
+    """
+    INPUT:
+       st - siman structure
+       E0 - decomposition energy(eV)
+       Eb - binding energy(eV)
+       matrix - matrix element
+    OUTPUT:
+       conc (float) - concentration of dopants (N_dopants/N_matrix)
+    """
+    k = 8.617e-05
+    NA = len(st.get_elements_by_el_name(ALK))
+    M = len(st.get_elements_by_el_name(matrix))
+    ml = M/NA
+
+    C = g * np.exp(-E0/(k*T)) + np.exp(-(E0+Eb)/(2*k*T))/np.sqrt(ml)
+    return C
+
+def Cl(ch, Eb, T=300, g = 6):
+    """
+    INPUT:
+       ch - hight temperature vacancy concentration (c_vac = N_matrix/N_dop * c_dop)
+       Eb - binding energy(eV)
+    OUTPUT:
+       conc (float) - free RT vacancy concentration 
+    """
+    k = 8.617e-05
+    al = np.exp(-Eb/(k*T))/g
+    C = (np.sqrt(al**2 +4*al*ch) - al) / (2 * (1 - al))
+    return C

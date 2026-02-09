@@ -559,7 +559,7 @@ class Defects_di:
          try:
             rr = self.look_match()
             if rr:
-               if rr[0]< 0.1:
+               if rr[0]< 0.05:
                   target_key = 'oxi_state'
                   compare = [rr[1][0], rr[1][1]]
                   #print(compare)

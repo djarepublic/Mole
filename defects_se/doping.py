@@ -677,14 +677,18 @@ def Ch(st, E0, Eb, matrix, T = 1000, ALK = 'Li', g = 6):
     C = g * np.exp(-E0/(k*T)) + np.exp(-(E0+Eb)/(2*k*T))/np.sqrt(ml)
     return C
 
-def Cl(ch, Eb, T=300, g = 6):
+def Cl(st, ch, Eb, T=300, g = 6):
     """
     INPUT:
-       ch - hight temperature vacancy concentration (c_vac = N_matrix/N_dop * c_dop)
+       ch - hight temperature dopant concentration (c_vac = N_matrix/N_alk * c_dop)
        Eb - binding energy(eV)
     OUTPUT:
        conc (float) - free RT vacancy concentration 
     """
+    NA = len(st.get_elements_by_el_name(ALK))
+    M = len(st.get_elements_by_el_name(matrix))
+    ml = M/NA 
+    c = ml * ch
     k = 8.617e-05
     al = np.exp(-Eb/(k*T))/g
     C = (np.sqrt(al**2 +4*al*ch) - al) / (2 * (1 - al))

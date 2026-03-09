@@ -20,7 +20,3 @@ dynamic = ["version", "description"]
 readme = "README.md"
 license = {file = "LICENSE"}
 
-[tool.setuptools.packages.find]
-where = ["defects_se"]
-include = ["*"]
-

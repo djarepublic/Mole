@@ -1,7 +1,7 @@
 from pymatgen.analysis.local_env import  CrystalNN
 from siman.geo import supercell
 import numpy as np 
-from mat_data import  eln, exceptions, table_ir, ionic_radius
+from .mat_data import  eln, exceptions, table_ir, ionic_radius
 from pymatgen.io.vasp import Chgcar
 from mp_api.client import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram

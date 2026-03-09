@@ -1,7 +1,7 @@
 import json, os
 
 
-def ionic_radius(el, state, coordination, radius_type = 'r_ionic'):
+def ionic_radius(el, state, coordination):
     """
     https://github.com/prtkm/ionic-radii
     R. D. Shannon, Revised Effective Ionic Radii and Systematic Studies of Interatomic Distances in Halides and Chalcogenides,
@@ -24,14 +24,14 @@ def ionic_radius(el, state, coordination, radius_type = 'r_ionic'):
 
     """
     # print(os.path.dirname(__file__))
-    with open(os.path.dirname(__file__)+"/shannon-radii.json") as f:
+    with open("ionic_radii_ml.json") as f:
         out = f.read()
 
     d = json.loads(out)
 
     # Enter Element, Charge, Coordination and one of - r_crystal, r_ionic, spin, remark
 
-    return d[el][str(state)][coordination][radius_type]
+    return d[el][state][coordination]
 
 # ionization_energies = { 'D': 13.60, 'OH': 100,
 #     'H': 13.60, 'He': 24.59, 'Li': 5.39, 'Be': 9.32, 'B': 8.30, 
@@ -89,14 +89,12 @@ eln = {'D': 13.60, 'OH': 100,
 
 alkali = ['Li', 'Na', 'K', 'Rb']
 
-other = ['At', 'Re', 'Tc', 'Rh', 'Os', 'Ra', 'Fe', 'Ni', 'Cr', 'Co', 'V', 'Au', 'Ag', 'Pt', 'W', 'Mo', 'Mn', 'Ir', 'Ru']
+other = other = ['At', 'Re', 'Tc', 'Rh', 'Os', 'Ra', 'Fe', 'Ni', 'Cr', 'Co', 'V', 'Au', 'Ag', 'Pt', 'W', 'Mo', 'Mn', 'Ir', 'Ru']
 actinides = ['Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr']
 lanthanides = ["Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu"]
 exceptions = actinides + lanthanides + other
 
-with open(os.path.dirname(__file__)+"/shannon-radii.json") as f:
+with open("ionic_radii_ml.json") as f:
         out = f.read()
 table_ir = json.loads(out)
 
-rn = ["N", "I", "II", "III", "IV", "V", "VI", "VII", "VIII",
-         "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI"]

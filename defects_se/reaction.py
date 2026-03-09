@@ -1,6 +1,6 @@
 import numpy as np
 from mp_api.client import MPRester
-from pymatgen.analysis.phase_diagram import (CompoundPhaseDiagram, PDPlotter, PhaseDiagram, PDEntry)
+from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.core import Composition
 from siman.core.structure import Structure
 pymatgen2siman = Structure().update_from_pymatgen

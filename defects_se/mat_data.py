@@ -24,7 +24,7 @@ def ionic_radius(el, state, coordination):
 
     """
     # print(os.path.dirname(__file__))
-    with open("./ionic_radii_ml.json") as f:
+    with open(os.path.dirname(__file__) + "/ionic_radii_ml.json") as f:
         out = f.read()
 
     d = json.loads(out)
@@ -94,7 +94,7 @@ actinides = ['Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'F
 lanthanides = ["Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu"]
 exceptions = actinides + lanthanides + other
 
-with open("./ionic_radii_ml.json") as f:
+with open(os.path.dirname(__file__) + "/ionic_radii_ml.json") as f:
         out = f.read()
 table_ir = json.loads(out)
 

@@ -8,6 +8,8 @@ from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.core import Composition
 import os
 from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
+from pymatgen.io.ase import AseAtomsAdaptor
+from sevenn.sevennet_calculator import SevenNetCalculator
 
 from siman.core.structure import Structure
 pymatgen2siman = Structure().update_from_pymatgen
@@ -290,8 +292,20 @@ class Dop_Vac:
       r_st = sorted(zip(r, st_d, xred), key=lambda x: x[0])
       r_sorted, st_sorted, xred_sorted = map(list, zip(*r_st))
 
-      self.sc_associate = st_sorted[0]
-      self.sc_associate_draw = st_sorted[0].add_atom(xred_sorted[0], 'Pu')
+      calc = SevenNetCalculator("7net-0") 
+      st_short_mine = st_sorted[:3]
+      st_dp_mine = [st.convert2pymatgen() for st in st_short_mine]
+      st_da_mine = [AseAtomsAdaptor.get_atoms(s) for s in st_dp_mine]
+      # sevennet_0_cal = SevenNetCalculator("7net-0")
+      E_UP_mine = []
+      for s in st_da_mine:
+         s.calc = calc
+         E_UP_mine.append(s.get_potential_energy())
+      ind_min_e = E_UP_mine.index(min(E_UP_mine))
+      # st_min_e = st_sorted[ind_min_e]
+
+      self.sc_associate = st_sorted[ind_min_e]
+      self.sc_associate_draw = st_sorted[0].add_atom(xred_sorted[ind_min_e], 'Pu')
 
       self.sc_dissociate = st_sorted[-1]
       self.sc_dissociate_draw = st_sorted[-1].add_atom(xred_sorted[-1], 'Pu')

@@ -70,7 +70,7 @@ class Dopants:
       self.ion_types = {}
       for at in at_list:
           ion_dict = {}
-          if dict_oxi[at]>0:
+          if dict_oxi[at]>0 and at !='H':
              ion_dict['oxi_state'] = dict_oxi[at]
 
              sym_pos_ll = st.determine_symmetry_positions(at)

@@ -257,7 +257,7 @@ class Dop_Vac:
       else:
          l = []
          for i in range(3):
-            if self.st.rprimd_len()[i]<sc_size:
+            if d_obj.st.rprimd_len()[i]<sc_size:
                l.append(sc_size)
             else:
                l.append(d_obj.st.rprimd_len()[i])
@@ -328,7 +328,7 @@ class Dop_Int:
       else:
          l = []
          for i in range(3):
-            if self.st.rprimd_len()[i]<sc_size:
+            if d_obj.st.rprimd_len()[i]<sc_size:
                l.append(sc_size)
             else:
                l.append(self.st.rprimd_len()[i])

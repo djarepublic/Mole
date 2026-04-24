@@ -243,7 +243,7 @@ class Dopants:
    
 
 class Dop_Vac:
-   def __init__(self, d_obj, key, sc_size):
+   def __init__(self, d_obj, key, sc_size, opt=0):
             
 
       """
@@ -291,19 +291,24 @@ class Dop_Vac:
          st_d.append(cst1 )  
       r_st = sorted(zip(r, st_d, xred), key=lambda x: x[0])
       r_sorted, st_sorted, xred_sorted = map(list, zip(*r_st))
-
-      calc = SevenNetCalculator("7net-0") 
+      
       st_short_mine = st_sorted[:3]
-      st_dp_mine = [st.convert2pymatgen() for st in st_short_mine]
-      st_da_mine = [AseAtomsAdaptor.get_atoms(s) for s in st_dp_mine]
-      # sevennet_0_cal = SevenNetCalculator("7net-0")
-      E_UP_mine = []
-      for s in st_da_mine:
-         s.calc = calc
-         E_UP_mine.append(s.get_potential_energy())
-      ind_min_e = E_UP_mine.index(min(E_UP_mine))
+      if opt == 1:
+         calc = SevenNetCalculator("7net-0") 
+         st_dp_mine = [st.convert2pymatgen() for st in st_short_mine]
+         st_da_mine = [AseAtomsAdaptor.get_atoms(s) for s in st_dp_mine]
+         # sevennet_0_cal = SevenNetCalculator("7net-0")
+         E_UP_mine = []
+         for s in st_da_mine:
+            s.calc = calc 
+            E_UP_mine.append(s.get_potential_energy())
+         ind_min_e = E_UP_mine.index(min(E_UP_mine))
+      else:
+         ind_min_e = 0
+         
+         
       # st_min_e = st_sorted[ind_min_e]
-
+      self.st_mine = st_short_mine
       self.sc_associate = st_sorted[ind_min_e]
       self.sc_associate_draw = st_sorted[0].add_atom(xred_sorted[ind_min_e], 'Pu')
 
